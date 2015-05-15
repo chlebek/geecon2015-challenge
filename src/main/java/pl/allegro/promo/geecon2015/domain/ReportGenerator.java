@@ -16,11 +16,11 @@ import java.util.UUID;
 
 @Component
 public class ReportGenerator {
-    
+
     private final FinancialStatisticsRepository financialStatisticsRepository;
-    
+
     private final UserRepository userRepository;
-    
+
     private final TransactionRepository transactionRepository;
 
     @Autowired
@@ -43,13 +43,11 @@ public class ReportGenerator {
     }
 
     private BigDecimal calculateAmount(UUID id) {
-        UserTransactions userTransactions = null;
         try {
-            userTransactions = transactionRepository.transactionsOf(id);
+            return transactionRepository.transactionsOf(id).getTransactions().stream().map((x) -> x.getAmount()).reduce(BigDecimal.ZERO, BigDecimal::add);
         } catch (Exception ex) {
             return null;
         }
-        return userTransactions.getTransactions().stream().map((x) -> x.getAmount()).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
-    
+
 }
