@@ -24,6 +24,10 @@ public class RestUserRepository implements UserRepository {
     
     @Override
     public User detailsOf(UUID userId) {
-        return restTemplate.getForEntity(baseUri + "/users/" + userId.toString(), User.class).getBody();
+        try {
+            return restTemplate.getForEntity(baseUri + "/users/" + userId.toString(), User.class).getBody();
+        } catch (Exception ex) {
+            return new User(userId, "<failed>");
+        }
     }
 }
